@@ -1,4 +1,4 @@
-package Final;
+package SudokuPuzzle;
 
 import java.util.Random;
 
@@ -14,14 +14,23 @@ public class SudokuGenerator {
 			{9, 6, 1, 5, 3, 7, 2, 8, 4},
 			{2, 8, 7, 4, 1, 9, 6, 3, 5},
 			{3, 4, 5, 2, 8, 6, 1, 7, 9}};;
+	private int[][] sudokuClone = new int[9][9];
 	private Random random = new Random();	
+	
+	public static final int EASY = 1;
+	public static final int MEDIUM = 2;
+	public static final int HARD = 3;
+	
+	public SudokuGenerator(){
+		this.generator(EASY);
+	}
+	public SudokuGenerator(int level){
+		this.generator(level);
+	}
+	
 	
 	public int[][] getSudoku() {
 		return sudoku;
-	}
-
-	SudokuGenerator(){
-		this.generator(generatorSudokuBase());
 	}
 	
 	public int[][] generatorSudokuBase(){
@@ -53,17 +62,25 @@ public class SudokuGenerator {
 		}
 		return sudoku;
 	}
-	
-	public void generator(int[][] sudoku){
-		for(int i = 0; i < 9; i+=3){
-			for(int j = 0; j < 9; j+=3){
-				for(int row = (i/3)*3; row < (i/3)*3+3; row++){
-					for(int column = (j/3)*3; column < (j/3)*3+3; column++){
-						if(random.nextInt(9)%2 == 0)
-							sudoku[row][column] = 0;
-					}
-				}
-			}
+
+	//create a method to generate a sudoku according to difficulty
+	public int[][] generator(int level){
+		generatorSudokuBase();
+		int numsOfRemove = 0;
+		switch(level){
+			case EASY: numsOfRemove = 40; break;
+			case MEDIUM: numsOfRemove = 50; break;
+			case HARD: numsOfRemove = 64; break;
+			default: break;
 		}
+		
+		for(int i = 0; i < numsOfRemove; i++){
+			int x = random.nextInt(9);
+			int y = random.nextInt(9);
+			sudoku[x][y] = sudokuClone[x][y] = 0;
+		}
+		
+		return sudoku;
 	}
+	
 }
